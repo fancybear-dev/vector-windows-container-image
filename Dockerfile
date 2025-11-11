@@ -3,7 +3,7 @@
 ARG WINDOWS_VERSION
 ARG VECTOR_VERSION
 
-from alpine:latest as downloader
+FROM --platform=linux/amd64 alpine:latest as downloader
 
 WORKDIR /vector
 
@@ -12,7 +12,7 @@ RUN apk add --no-cache curl unzip && \
     unzip vector.zip && \
     rm vector.zip
 
-FROM mcr.microsoft.com/windows/servercore:$WINDOWS_VERSION
+FROM --platform=windows/amd64 mcr.microsoft.com/windows/servercore:$WINDOWS_VERSION
 
 WORKDIR C:/Program Files/Vector
 

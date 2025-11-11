@@ -48,7 +48,6 @@ jobs:
         with:
           context: .
           push: true
-          platforms: windows/amd64
           build-args: |
             WINDOWS_VERSION=ltsc2025
             VECTOR_VERSION=0.51.0
