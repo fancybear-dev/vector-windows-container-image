@@ -33,12 +33,13 @@ jobs:
         id: push
         shell: pwsh
         run: |
+          $vectorVersion = "0.51.0"
           docker build `
-            --build-arg WINDOWS_VERSION=ltsc2025 `
-            --build-arg VECTOR_VERSION=0.51.0 `
-            -t ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:latest `
-            -t ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:v0.51.0 `
-            .
+          --build-arg WINDOWS_VERSION=ltsc2025 `
+          --build-arg VECTOR_VERSION=$vectorVersion `
+          -t ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:latest `
+          -t ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:v$vectorVersion `
+          .
 
           docker push ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:latest
-          docker push ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:v0.51.0
+          docker push ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:v$vectorVersion

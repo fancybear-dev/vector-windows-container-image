@@ -18,4 +18,4 @@ FROM mcr.microsoft.com/windows/nanoserver:$WINDOWS_VERSION as runtime
 
 COPY --from=vector ["C:/Program Files/Vector", "C:/Program Files/Vector"]
 
-ENTRYPOINT ["C:\Program Files\Vector\bin\vector.exe"]
+ENTRYPOINT ["C:\\Program Files\\Vector\\bin\\vector.exe"]
