@@ -6,13 +6,13 @@ FROM mcr.microsoft.com/windows/servercore:$WINDOWS_VERSION as vector
 
 ARG VECTOR_VERSION
 
-WORKDIR "C:/Program Files/Vector"
+WORKDIR "/windows/temp"
 
-ADD install-vector.ps1 /windows/temp/install-vector.ps1
+ADD install-vector.ps1 install-vector.ps1
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-RUN /windows/temp/install-vector.ps1 -VectorVersion $env:VECTOR_VERSION
+RUN install-vector.ps1 -VectorVersion $env:VECTOR_VERSION
 
 FROM mcr.microsoft.com/windows/nanoserver:$WINDOWS_VERSION as runtime
 
