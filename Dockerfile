@@ -18,6 +18,4 @@ FROM mcr.microsoft.com/windows/nanoserver:$WINDOWS_VERSION as runtime
 
 COPY --from=vector ["C:/Program Files/Vector", "C:/Program Files/Vector"]
 
-RUN setx /M PATH "%PATH%;C:\Program Files\Vector\bin"
-
-ENTRYPOINT ["vector.exe"]
+ENTRYPOINT ["C:\Program Files\Vector\bin\vector.exe"]
