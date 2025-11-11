@@ -12,7 +12,7 @@ ADD install-vector.ps1 /windows/temp/install-vector.ps1
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-RUN /windows/temp/install-vector.ps1 -VectorVersion $VECTOR_VERSION
+RUN /windows/temp/install-vector.ps1 -VectorVersion $env:VECTOR_VERSION
 
 FROM mcr.microsoft.com/windows/nanoserver:$WINDOWS_VERSION as runtime
 
