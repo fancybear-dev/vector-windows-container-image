@@ -49,8 +49,8 @@ jobs:
           context: .
           push: true
           platforms: windows/amd64
-          build-args:
-            - WINDOWS_VERSION=ltsc2025
-            - VECTOR_VERSION=0.51.0
+          build-args: |
+            WINDOWS_VERSION=ltsc2025
+            VECTOR_VERSION=0.51.0
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
