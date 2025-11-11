@@ -46,28 +46,20 @@ jobs:
         id: push
         shell: pwsh
         run: |
-          $imageName = "${{ steps.meta.outputs.tags }}".Split("`n")[0]  # Take first tag (usually :latest)
-          $allTags = "${{ steps.meta.outputs.tags }}".Trim() -split "`n"
+          $rawTags   = "${{ steps.meta.outputs.tags }}".Trim()
+          $rawLabels = "${{ steps.meta.outputs.labels }}".Trim()
+          $tags = $rawTags -split "`n" | Where-Object { $_ -ne "" }
+          if ($tags.Count -eq 0) { throw "No tags" }
 
-          # Build the image with your build args
+          $tagArgs = $tags | ForEach-Object { "-t", $_ } | ForEach-Object { $_ }
+
           docker build `
-            --build-arg WINDOWS_VERSION=ltsc2025 `
+            --build-arg WINDOWS_VERSION=ltsc2022 `
             --build-arg VECTOR_VERSION=0.51.0 `
-            --label "${{ steps.meta.outputs.labels }}" `
-            -t $imageName `
-            ${{ join(' -t ', $allTags) }} `
+            --label "$rawLabels" `
+            $tagArgs `
             .
 
-          # Push all tags
-          foreach ($tag in $allTags) {
-            Write-Host "Pushing $tag"
+          foreach ($tag in $tags) {
             docker push $tag
           }
-
-          # Output the same values as build-push-action for compatibility
-          $tagsJson = ($allTags | ConvertTo-Json -Compress)
-          $digest = (docker inspect --format='{{index .RepoDigests 0}}' $allTags[0])
-
-          echo "tags=$tagsJson" >> $env:GITHUB_OUTPUT
-          echo "digest=$digest" >> $env:GITHUB_OUTPUT
-          echo "imageid=$(docker inspect --format='{{.Id}}' $allTags[0])" >> $env:GITHUB_OUTPUT
