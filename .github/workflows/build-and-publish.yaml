@@ -44,12 +44,30 @@ jobs:
 
       - name: Build and push Docker image
         id: push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          build-args: |
-            WINDOWS_VERSION=ltsc2025
-            VECTOR_VERSION=0.51.0
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+        shell: pwsh
+        run: |
+          $imageName = "${{ steps.meta.outputs.tags }}".Split("`n")[0]  # Take first tag (usually :latest)
+          $allTags = "${{ steps.meta.outputs.tags }}".Trim() -split "`n"
+
+          # Build the image with your build args
+          docker build `
+            --build-arg WINDOWS_VERSION=ltsc2025 `
+            --build-arg VECTOR_VERSION=0.51.0 `
+            --label "${{ steps.meta.outputs.labels }}" `
+            -t $imageName `
+            ${{ join(' -t ', $allTags) }} `
+            .
+
+          # Push all tags
+          foreach ($tag in $allTags) {
+            Write-Host "Pushing $tag"
+            docker push $tag
+          }
+
+          # Output the same values as build-push-action for compatibility
+          $tagsJson = ($allTags | ConvertTo-Json -Compress)
+          $digest = (docker inspect --format='{{index .RepoDigests 0}}' $allTags[0])
+
+          echo "tags=$tagsJson" >> $env:GITHUB_OUTPUT
+          echo "digest=$digest" >> $env:GITHUB_OUTPUT
+          echo "imageid=$(docker inspect --format='{{.Id}}' $allTags[0])" >> $env:GITHUB_OUTPUT
