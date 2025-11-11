@@ -2,7 +2,7 @@
 
 ARG WINDOWS_VERSION
 
-FROM mcr.microsoft.com/windows/servercore:$WINDOWS_VERSION
+FROM mcr.microsoft.com/windows/nanoserver:$WINDOWS_VERSION
 
 ARG VECTOR_VERSION
 
