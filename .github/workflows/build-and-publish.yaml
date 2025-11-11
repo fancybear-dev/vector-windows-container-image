@@ -48,9 +48,7 @@ jobs:
         with:
           context: .
           push: true
-          platforms:
-            - windows/amd64
-          build-args:
-            - WINDOWS_VERSION=ltsc2025
+          platforms: windows/amd64
+          build-args: WINDOWS_VERSION=ltsc2025
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
