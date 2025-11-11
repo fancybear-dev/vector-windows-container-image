@@ -3,21 +3,15 @@
 ARG WINDOWS_VERSION
 ARG VECTOR_VERSION
 
-FROM alpine as downloader
-
-WORKDIR /vector
-
-RUN apk add --no-cache curl unzip && \
-    curl -L -o vector.zip https://github.com/vectordotdev/vector/releases/download/v$VECTOR_VERSION/vector-$VECTOR_VERSION-x86_64-pc-windows-msvc.zip && \
-    unzip vector.zip && \
-    rm vector.zip
-
 FROM mcr.microsoft.com/windows/servercore:$WINDOWS_VERSION
 
 WORKDIR C:/Program Files/Vector
 
-ENV PATH="C:\\Program Files\\Vector\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Windows\\System32\\WindowsPowerShell\\v1.0"
+RUN powershell -Command \
+    Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/vectordotdev/vector/releases/download/v$env:VECTOR_VERSION/vector-$env:VECTOR_VERSION-x86_64-pc-windows-msvc.zip" -OutFile "vector.zip"; \
+    Expand-Archive -Path "vector.zip" -DestinationPath "."; \
+    Remove-Item "vector.zip"
 
-COPY --from=downloader ["/vector/", "C:/Program Files/Vector"]
+ENV PATH="C:\\Program Files\\Vector\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Windows\\System32\\WindowsPowerShell\\v1.0"
 
 ENTRYPOINT ["vector.exe"]
