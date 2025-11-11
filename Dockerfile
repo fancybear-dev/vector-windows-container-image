@@ -10,20 +10,20 @@ WORKDIR "C:/Program Files/Vector"
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-RUN if ($env:VECTOR_VERSION) { \
-        $version = $env:VECTOR_VERSION; \
-        Write-Host "Using pinned VECTOR_VERSION: $version"; \
-    } else { \
-        Write-Host "VECTOR_VERSION not set. Fetching latest version from GitHub API..."; \
-        $apiUrl = "https://api.github.com/repos/vectordotdev/vector/releases/latest"; \
-        $releaseInfo = Invoke-RestMethod -Uri $apiUrl; \
-        $version = $releaseInfo.tag_name.TrimStart('v'); \
-        Write-Host "Latest version found: $version"; \
-    } \
-    $url = "https://github.com/vectordotdev/vector/releases/download/v${version}/vector-${version}-x86_64-pc-windows-msvc.zip"; \
-    Write-Host "Download URL: $url"; \
-    Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile "vector.zip"; \
-    Expand-Archive -Path "vector.zip" -DestinationPath "."; \
+RUN if ($env:VECTOR_VERSION) { `
+        $version = $env:VECTOR_VERSION; `
+        Write-Host "Using pinned VECTOR_VERSION: $version"; `
+    } else { `
+        Write-Host "VECTOR_VERSION not set. Fetching latest version from GitHub API..."; `
+        $apiUrl = "https://api.github.com/repos/vectordotdev/vector/releases/latest"; `
+        $releaseInfo = Invoke-RestMethod -Uri $apiUrl; `
+        $version = $releaseInfo.tag_name.TrimStart('v'); `
+        Write-Host "Latest version found: $version"; `
+    } `
+    $url = "https://github.com/vectordotdev/vector/releases/download/v${version}/vector-${version}-x86_64-pc-windows-msvc.zip"; `
+    Write-Host "Download URL: $url"; `
+    Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile "vector.zip"; `
+    Expand-Archive -Path "vector.zip" -DestinationPath "."; `
     Remove-Item "vector.zip" -Force
 
 RUN setx /M PATH "%PATH%;C:\Program Files\Vector\bin"
