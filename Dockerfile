@@ -2,7 +2,7 @@
 
 ARG WINDOWS_VERSION
 
-FROM mcr.microsoft.com/windows/servercore:$WINDOWS_VERSION as downloader
+FROM mcr.microsoft.com/windows/servercore:$WINDOWS_VERSION as vector
 
 ARG VECTOR_VERSION
 
@@ -16,7 +16,7 @@ RUN /windows/temp/install-vector.ps1 -VectorVersion $env:VECTOR_VERSION
 
 FROM mcr.microsoft.com/windows/nanoserver:$WINDOWS_VERSION as runtime
 
-COPY --from=downloader "C:/Program Files/Vector" "C:/Program Files/Vector"
+COPY --from=vector ["C:/Program Files/Vector", "C:/Program Files/Vector"]
 
 RUN setx /M PATH "%PATH%;C:\Program Files\Vector\bin"
 
