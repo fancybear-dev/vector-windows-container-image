@@ -39,9 +39,9 @@ jobs:
           docker build `
             --build-arg WINDOWS_VERSION=ltsc2022 `
             --build-arg VECTOR_VERSION=0.51.0 `
-            -t ${{ github.repository_owner }}/vector-windows-container-image:latest `
-            -t ${{ github.repository_owner }}/vector-windows-container-image:v0.51.0 `
+            -t ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:latest `
+            -t ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:v0.51.0 `
             .
 
-          docker push ${{ github.repository_owner }}/vector-windows-container-image:latest
-          docker push ${{ github.repository_owner }}/vector-windows-container-image:v0.51.0
+          docker push ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:latest
+          docker push ghcr.io/${{ github.repository_owner }}/vector-windows-container-image:v0.51.0

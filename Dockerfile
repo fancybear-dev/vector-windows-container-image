@@ -7,8 +7,9 @@ FROM mcr.microsoft.com/windows/servercore:$WINDOWS_VERSION
 
 WORKDIR C:/Program Files/Vector
 
-RUN powershell -Command \
-    Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/vectordotdev/vector/releases/download/v$env:VECTOR_VERSION/vector-$env:VECTOR_VERSION-x86_64-pc-windows-msvc.zip" -OutFile "vector.zip"; \
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+RUN Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/vectordotdev/vector/releases/download/v$env:VECTOR_VERSION/vector-$env:VECTOR_VERSION-x86_64-pc-windows-msvc.zip" -OutFile "vector.zip"; \
     Expand-Archive -Path "vector.zip" -DestinationPath "."; \
     Remove-Item "vector.zip"
 
